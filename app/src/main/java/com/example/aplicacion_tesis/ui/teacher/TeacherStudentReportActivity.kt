@@ -4,12 +4,14 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.aplicacion_tesis.R
 import com.example.aplicacion_tesis.model.dto.MaterialStatItemDTO
 import com.example.aplicacion_tesis.model.dto.ProgresoPorCompetenciaItemDTO
+import com.example.aplicacion_tesis.model.dto.TiempoNivelItemDTO
 import com.example.aplicacion_tesis.network.RetrofitClient
 import com.example.aplicacion_tesis.network.TokenStore
 import com.github.mikephil.charting.charts.BarChart
@@ -51,6 +53,10 @@ class TeacherStudentReportActivity : AppCompatActivity() {
     private lateinit var tvMatDistintos      : TextView
     private lateinit var tvMatEmpty          : TextView
     private lateinit var chartMatRevisiones  : HorizontalBarChart
+
+    // ── Card tiempo por dificultad ────────────────────────────────────────────
+    private lateinit var llTiempoNivelDocente:   LinearLayout
+    private lateinit var tvTiempoNivelDocenteEmpty: TextView
 
     private var studentId: Int = -1
     private var studentProgress: Int = 0
@@ -102,11 +108,13 @@ class TeacherStudentReportActivity : AppCompatActivity() {
         tvReportFrecTotal      = findViewById(R.id.tvReportFrecTotal)
         tvReportFrecUltima     = findViewById(R.id.tvReportFrecUltima)
 
-        tvMatTotalRevisiones = findViewById(R.id.tvMatTotalRevisiones)
-        tvMatTiempoTotal     = findViewById(R.id.tvMatTiempoTotal)
-        tvMatDistintos       = findViewById(R.id.tvMatDistintos)
-        tvMatEmpty           = findViewById(R.id.tvMatEmpty)
-        chartMatRevisiones   = findViewById(R.id.chartMatRevisiones)
+        tvMatTotalRevisiones     = findViewById(R.id.tvMatTotalRevisiones)
+        tvMatTiempoTotal         = findViewById(R.id.tvMatTiempoTotal)
+        tvMatDistintos           = findViewById(R.id.tvMatDistintos)
+        tvMatEmpty               = findViewById(R.id.tvMatEmpty)
+        chartMatRevisiones       = findViewById(R.id.chartMatRevisiones)
+        llTiempoNivelDocente     = findViewById(R.id.llTiempoNivelDocente)
+        tvTiempoNivelDocenteEmpty= findViewById(R.id.tvTiempoNivelDocenteEmpty)
     }
 
     // =============================================
@@ -164,6 +172,13 @@ class TeacherStudentReportActivity : AppCompatActivity() {
                     } catch (_: Exception) {}
                 }
 
+                // ── Tiempo por nivel de dificultad ────────────────────────
+                var tiempoNiveles: List<TiempoNivelItemDTO> = emptyList()
+                try {
+                    val tiempoResp = RetrofitClient.progresoApi.getTiempoPorNivel(studentId)
+                    if (tiempoResp.status) tiempoNiveles = tiempoResp.niveles
+                } catch (_: Exception) {}
+
                 val ejFinal       = ejercicios
                 val matFinal      = materiales
                 val totFinal      = total
@@ -174,6 +189,7 @@ class TeacherStudentReportActivity : AppCompatActivity() {
                 val matMinFinal   = matTiempoMin
                 val matDistFinal  = matDistintos
                 val matDetFinal   = matDetalle
+                val tiempoFinal   = tiempoNiveles
 
                 withContext(Dispatchers.Main) {
                     tvStudentSubtitle.text = "Progreso general: $progFinal%"
@@ -185,6 +201,8 @@ class TeacherStudentReportActivity : AppCompatActivity() {
                     tvReportFrecUltima.text     = "Última actividad: $ultFinal"
                     // ── Materiales de estudio ──────────────────────────────
                     setupMaterialesChart(matRevFinal, matMinFinal, matDistFinal, matDetFinal)
+                    // ── Tiempo por dificultad ──────────────────────────────
+                    setupTiempoNivel(tiempoFinal)
                 }
 
             } catch (e: Exception) {
@@ -470,6 +488,89 @@ class TeacherStudentReportActivity : AppCompatActivity() {
             animateY(700)
             invalidate()
         }
+    }
+
+    // =============================================
+    // TABLA TIEMPO POR NIVEL DE DIFICULTAD
+    // =============================================
+    private fun setupTiempoNivel(niveles: List<TiempoNivelItemDTO>) {
+        llTiempoNivelDocente.removeAllViews()
+        if (niveles.isEmpty()) {
+            tvTiempoNivelDocenteEmpty.visibility = View.VISIBLE
+            return
+        }
+        tvTiempoNivelDocenteEmpty.visibility = View.GONE
+        niveles.forEach { llTiempoNivelDocente.addView(crearFilaNivel(it)) }
+    }
+
+    private fun crearFilaNivel(item: TiempoNivelItemDTO): View {
+        val ctx = this
+        val badgeColor = when (item.nivelEjercicio) {
+            1 -> Color.parseColor("#27AE60")
+            2 -> Color.parseColor("#0A6FD4")
+            3 -> Color.parseColor("#E67E22")
+            4 -> Color.parseColor("#7B1FA2")
+            else -> Color.parseColor("#607D8B")
+        }
+        val aciertoColor = when {
+            item.tasaAcierto >= 0.70f -> Color.parseColor("#27AE60")
+            item.tasaAcierto >= 0.45f -> Color.parseColor("#E67E22")
+            else                      -> Color.parseColor("#E74C3C")
+        }
+        val px8 = (8 * resources.displayMetrics.density).toInt()
+        val px4 = (4 * resources.displayMetrics.density).toInt()
+        val px2 = (2 * resources.displayMetrics.density).toInt()
+
+        val row = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(0, px4, 0, px4)
+        }
+        val badge = TextView(ctx).apply {
+            text = "N${item.nivelEjercicio}"
+            textSize = 11f
+            setTextColor(Color.WHITE)
+            setBackgroundColor(badgeColor)
+            setPadding(px8, px2, px8, px2)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { marginEnd = px8 }
+        }
+        val tvNombre = TextView(ctx).apply {
+            text = item.nombreNivel
+            textSize = 13f
+            setTextColor(Color.parseColor("#212121"))
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2f)
+        }
+        val tvTiempo = TextView(ctx).apply {
+            text = item.promedioFormato
+            textSize = 13f
+            setTextColor(Color.parseColor("#424242"))
+            gravity = android.view.Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.5f)
+        }
+        val pct = (item.tasaAcierto * 100).toInt()
+        val tvAcierto = TextView(ctx).apply {
+            text = "$pct%"
+            textSize = 13f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            setTextColor(aciertoColor)
+            gravity = android.view.Gravity.END
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        val tvTotal = TextView(ctx).apply {
+            text = item.totalRespuestas.toString()
+            textSize = 12f
+            setTextColor(Color.parseColor("#9E9E9E"))
+            gravity = android.view.Gravity.END
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        row.addView(badge)
+        row.addView(tvNombre)
+        row.addView(tvTiempo)
+        row.addView(tvAcierto)
+        row.addView(tvTotal)
+        return row
     }
 
     // =============================================

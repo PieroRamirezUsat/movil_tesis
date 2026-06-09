@@ -413,6 +413,85 @@
         </androidx.cardview.widget.CardView>
         <!-- ══ FIN CARD MATERIALES ════════════════════════════════════ -->
 
+        <!-- ══ CARD TIEMPO POR DIFICULTAD ══════════════════════════════ -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardTiempoNivelDocente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="16dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⏱ Tiempo por Dificultad"
+                    android:textColor="@color/ai_text_dark"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tiempo promedio de respuesta y tasa de acierto por nivel"
+                    android:textColor="@color/ai_text_muted"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Cabecera de columnas -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="6dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="2" android:text="Nivel"
+                        android:textSize="11sp" android:textStyle="bold"
+                        android:textColor="@color/ai_text_muted"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1.5" android:text="Tiempo prom."
+                        android:textSize="11sp" android:textStyle="bold"
+                        android:textColor="@color/ai_text_muted" android:gravity="center"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="Aciertos"
+                        android:textSize="11sp" android:textStyle="bold"
+                        android:textColor="@color/ai_text_muted" android:gravity="end"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="Resp."
+                        android:textSize="11sp" android:textStyle="bold"
+                        android:textColor="@color/ai_text_muted" android:gravity="end"/>
+                </LinearLayout>
+
+                <!-- Filas dinámicas -->
+                <LinearLayout
+                    android:id="@+id/llTiempoNivelDocente"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+
+                <TextView
+                    android:id="@+id/tvTiempoNivelDocenteEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Aún no hay respuestas registradas."
+                    android:textColor="@color/ai_text_muted"
+                    android:textSize="13sp"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <!-- ══ FIN CARD TIEMPO POR DIFICULTAD ══════════════════════════ -->
+
         <!-- CARD FRECUENCIA DE USO -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardFrecuenciaIndividual"
