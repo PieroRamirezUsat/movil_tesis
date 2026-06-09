@@ -235,6 +235,100 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- ════════════════════════════════════════
+             TIEMPO POR NIVEL DE DIFICULTAD
+             ════════════════════════════════════════ -->
+        <TextView
+            android:id="@+id/tvTituloTiempoNivel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Tiempo por Dificultad"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/ai_text_dark"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardTiempoNivel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <!-- Cabecera de columnas -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Nivel"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/ai_text_muted"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:text="Tiempo prom."
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/ai_text_muted"
+                        android:gravity="center"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Aciertos"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/ai_text_muted"
+                        android:gravity="end"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Resp."
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/ai_text_muted"
+                        android:gravity="end"/>
+                </LinearLayout>
+
+                <!-- Filas de datos (agregadas dinámicamente desde ProgresoFragment) -->
+                <LinearLayout
+                    android:id="@+id/llTiempoPorNivel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+
+                <!-- Sin datos -->
+                <TextView
+                    android:id="@+id/tvTiempoNivelEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Aún no hay respuestas registradas."
+                    android:textColor="@color/ai_text_muted"
+                    android:textSize="13sp"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <!-- HISTORIAL -->
         <TextView
             android:id="@+id/tvTituloHistorial"

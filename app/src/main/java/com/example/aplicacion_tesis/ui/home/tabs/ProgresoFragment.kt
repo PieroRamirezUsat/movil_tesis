@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aplicacion_tesis.R
+import com.example.aplicacion_tesis.model.dto.TiempoNivelItemDTO
 import com.example.aplicacion_tesis.network.RetrofitClient
 import com.example.aplicacion_tesis.network.TokenStore
 import com.example.aplicacion_tesis.ui.components.DonutChartView
@@ -38,6 +40,10 @@ class ProgresoFragment : Fragment() {
     private lateinit var spinnerCompetencia:    Spinner
     private lateinit var tvPieDetalle:          TextView
     private var competenciasActuales: List<ProgresoPorCompetenciaItemDTO> = emptyList()
+
+    // Sección "Tiempo por nivel de dificultad"
+    private lateinit var llTiempoPorNivel:   LinearLayout
+    private lateinit var tvTiempoNivelEmpty: TextView
 
     private lateinit var rvHistorial:      RecyclerView
     private lateinit var tvHistorialEmpty: TextView
@@ -73,6 +79,9 @@ class ProgresoFragment : Fragment() {
         chartPieCompetencia = view.findViewById(R.id.chartPieCompetenciaEstudiante)
         spinnerCompetencia  = view.findViewById(R.id.spinnerCompetenciaEstudiante)
         tvPieDetalle        = view.findViewById(R.id.tvPieDetalleEstudiante)
+
+        llTiempoPorNivel   = view.findViewById(R.id.llTiempoPorNivel)
+        tvTiempoNivelEmpty = view.findViewById(R.id.tvTiempoNivelEmpty)
 
         rvHistorial      = view.findViewById(R.id.rvHistorialProgreso)
         tvHistorialEmpty = view.findViewById(R.id.tvHistorialEmpty)
@@ -185,7 +194,10 @@ class ProgresoFragment : Fragment() {
                 setupPieChartCompetencias(temas)
             }
 
-            // 3) Historial — primeros 5 al cargar
+            // 3) Tiempo por nivel de dificultad
+            cargarTiempoPorNivel(idEstudiante)
+
+            // 4) Historial — primeros 5 al cargar
             mostrandoTodo = false
             cargarHistorial(idEstudiante, limite = LIMITE_INICIAL)
 
@@ -265,6 +277,122 @@ class ProgresoFragment : Fragment() {
         "forma"       in nombre.lowercase() -> "Forma / Movimiento"
         "datos"       in nombre.lowercase() -> "Gestión de Datos"
         else -> nombre.take(30)
+    }
+
+    // =============================================
+    // TIEMPO POR NIVEL DE DIFICULTAD
+    // =============================================
+    private suspend fun cargarTiempoPorNivel(idEstudiante: Int) {
+        try {
+            val resp = RetrofitClient.progresoApi.getTiempoPorNivel(idEstudiante)
+            llTiempoPorNivel.removeAllViews()
+
+            if (!resp.status || resp.niveles.isEmpty()) {
+                tvTiempoNivelEmpty.visibility = View.VISIBLE
+                return
+            }
+            tvTiempoNivelEmpty.visibility = View.GONE
+            resp.niveles.forEach { item -> llTiempoPorNivel.addView(crearFilaNivel(item)) }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            tvTiempoNivelEmpty.visibility = View.VISIBLE
+        }
+    }
+
+    /**
+     * Crea una fila para un nivel de dificultad:
+     *   [badge N#]  Nombre          2m 28s   83%    12
+     */
+    private fun crearFilaNivel(item: TiempoNivelItemDTO): View {
+        val ctx = requireContext()
+
+        // Colores por nivel: N1=verde, N2=azul, N3=naranja, N4=morado
+        val badgeColor = when (item.nivelEjercicio) {
+            1 -> Color.parseColor("#27AE60")
+            2 -> Color.parseColor("#0A6FD4")
+            3 -> Color.parseColor("#E67E22")
+            4 -> Color.parseColor("#7B1FA2")
+            else -> Color.parseColor("#607D8B")
+        }
+        // Color de tasa de acierto: >=70% verde, >=45% naranja, rojo
+        val aciertoColor = when {
+            item.tasaAcierto >= 0.70f -> Color.parseColor("#27AE60")
+            item.tasaAcierto >= 0.45f -> Color.parseColor("#E67E22")
+            else                      -> Color.parseColor("#E74C3C")
+        }
+
+        val px8  = (8  * resources.displayMetrics.density).toInt()
+        val px4  = (4  * resources.displayMetrics.density).toInt()
+        val px2  = (2  * resources.displayMetrics.density).toInt()
+
+        // Fila horizontal principal
+        val row = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(0, px4, 0, px4)
+        }
+
+        // Badge "N1"
+        val badge = TextView(ctx).apply {
+            text      = "N${item.nivelEjercicio}"
+            textSize  = 11f
+            setTextColor(Color.WHITE)
+            setBackgroundColor(badgeColor)
+            setPadding(px8, px2, px8, px2)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { marginEnd = px8 }
+            layoutParams = lp
+        }
+
+        // Nombre del nivel (peso 2)
+        val tvNombre = TextView(ctx).apply {
+            text      = item.nombreNivel
+            textSize  = 13f
+            setTextColor(Color.parseColor("#212121"))
+            val lp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2f)
+            layoutParams = lp
+        }
+
+        // Tiempo promedio (peso 1.5)
+        val tvTiempo = TextView(ctx).apply {
+            text      = item.promedioFormato
+            textSize  = 13f
+            setTextColor(Color.parseColor("#424242"))
+            gravity   = android.view.Gravity.CENTER
+            val lp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.5f)
+            layoutParams = lp
+        }
+
+        // Tasa de acierto en % (peso 1)
+        val pct = (item.tasaAcierto * 100).toInt()
+        val tvAcierto = TextView(ctx).apply {
+            text      = "$pct%"
+            textSize  = 13f
+            typeface  = android.graphics.Typeface.DEFAULT_BOLD
+            setTextColor(aciertoColor)
+            gravity   = android.view.Gravity.END
+            val lp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            layoutParams = lp
+        }
+
+        // Total respuestas (peso 1)
+        val tvTotal = TextView(ctx).apply {
+            text      = item.totalRespuestas.toString()
+            textSize  = 12f
+            setTextColor(Color.parseColor("#9E9E9E"))
+            gravity   = android.view.Gravity.END
+            val lp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            layoutParams = lp
+        }
+
+        row.addView(badge)
+        row.addView(tvNombre)
+        row.addView(tvTiempo)
+        row.addView(tvAcierto)
+        row.addView(tvTotal)
+        return row
     }
 
     // =============================================
