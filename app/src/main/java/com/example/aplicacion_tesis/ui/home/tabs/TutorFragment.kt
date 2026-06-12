@@ -1385,6 +1385,18 @@ class TutorFragment : Fragment() {
         tvResultadoPuntaje.text            = "Puntaje: $puntaje%"
         tvTituloTutor.text                 = "Evaluación completada ✅"
 
+        // M9: mensaje motivacional + color del puntaje según el resultado
+        val tvMensaje = view?.findViewById<TextView>(R.id.tvResultadoMensaje)
+        val (mensaje, color) = when {
+            puntaje >= 90 -> "🏆 ¡Excelente! Dominas estos temas." to 0xFF27AE60.toInt()
+            puntaje >= 70 -> "💪 ¡Muy bien! Vas por buen camino."  to 0xFF27AE60.toInt()
+            puntaje >= 50 -> "📈 Buen intento. Sigue practicando en el tutor para mejorar." to 0xFFE67E22.toInt()
+            else          -> "📚 No te desanimes: practica en el módulo Tutor y verás tu progreso." to 0xFFE74C3C.toInt()
+        }
+        tvMensaje?.text = mensaje
+        tvMensaje?.visibility = View.VISIBLE
+        tvResultadoPuntaje.setTextColor(color)
+
         // ✅ Botón para verificar nueva evaluación o ir a repaso
         val btnVolverRepaso = view?.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnVolverRepaso)
         btnVolverRepaso?.visibility = View.VISIBLE

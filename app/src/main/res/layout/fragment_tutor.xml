@@ -383,6 +383,17 @@
                 android:textSize="48sp"
                 android:textStyle="bold"
                 android:textColor="@color/ai_primary"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Mensaje motivacional según el puntaje (M9) -->
+            <TextView
+                android:id="@+id/tvResultadoMensaje"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="14sp"
+                android:gravity="center"
+                android:textColor="@color/ai_text_muted"
                 android:layout_marginBottom="20dp"/>
 
             <com.google.android.material.button.MaterialButton
