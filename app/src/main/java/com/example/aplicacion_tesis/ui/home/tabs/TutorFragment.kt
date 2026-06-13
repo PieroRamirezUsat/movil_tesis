@@ -1290,6 +1290,14 @@ class TutorFragment : Fragment() {
             .setCancelable(false)
             .create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        // Limitar altura al 88% de la pantalla para que siempre quepa con scroll
+        dialog.setOnShowListener {
+            val dm = resources.displayMetrics
+            dialog.window?.setLayout(
+                (dm.widthPixels * 0.92).toInt(),
+                (dm.heightPixels * 0.88).toInt()
+            )
+        }
 
         // ── Bloqueo inicial de 60s — fuerza al menos leer el título del material ──
         waitJob = viewLifecycleOwner.lifecycleScope.launch {
