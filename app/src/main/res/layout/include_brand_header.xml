@@ -13,6 +13,50 @@
         android:layout_marginTop="-20dp"
         android:layout_marginEnd="-20dp"/>
 
+    <!-- Símbolos matemáticos decorativos flotantes -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="∑"
+        android:textColor="#20FFFFFF"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="56dp"
+        android:layout_marginBottom="2dp"
+        android:importantForAccessibility="no"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="π"
+        android:textColor="#16FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="6dp"
+        android:importantForAccessibility="no"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x²"
+        android:textColor="#18FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="110dp"
+        android:layout_marginBottom="8dp"
+        android:importantForAccessibility="no"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="∫"
+        android:textColor="#12FFFFFF"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_vertical|start"
+        android:layout_marginStart="8dp"
+        android:importantForAccessibility="no"/>
+
     <!-- Contenido -->
     <LinearLayout
         android:layout_width="match_parent"
