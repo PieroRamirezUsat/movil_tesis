@@ -1,219 +1,387 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ai_background_light"
-    android:padding="16dp">
+    android:background="@color/ai_bg_screen"
+    android:fitsSystemWindows="true">
 
+    <!-- Orbes decorativos de fondo -->
+    <View
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:background="@drawable/bg_orb_white"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="-50dp"
+        android:layout_marginEnd="-50dp"/>
+    <View
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/bg_orb_white"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="-30dp"
+        android:layout_marginStart="-30dp"/>
+
+    <!-- Símbolos matemáticos decorativos -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="∑"
+        android:textColor="#14FFFFFF"
+        android:textSize="90sp"
+        android:textStyle="bold"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="10dp"
+        android:importantForAccessibility="no"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x²"
+        android:textColor="#10FFFFFF"
+        android:textSize="64sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_vertical|start"
+        android:layout_marginStart="6dp"
+        android:importantForAccessibility="no"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="="
+        android:textColor="#0EFFFFFF"
+        android:textSize="72sp"
+        android:textStyle="bold"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="120dp"
+        android:layout_marginEnd="12dp"
+        android:importantForAccessibility="no"/>
+
+    <!-- CONTENIDO PRINCIPAL -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- ====== CABECERA: Back + título ====== -->
-        <LinearLayout
+        <!-- ══ HEADER GRADIENTE ══ -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_height="72dp"
+            android:background="@drawable/bg_gradient_header">
 
-            <ImageButton
-                android:id="@+id/btnBackPractica"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="8dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_arrow_back_24"
-                android:contentDescription="@string/volver" />
+            <!-- Orbe pequeño decorativo -->
+            <View
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_orb_white"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="-15dp"
+                android:layout_marginEnd="-15dp"/>
 
-            <TextView
-                android:id="@+id/tvTituloTutor"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Ejercicio de práctica"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:textColor="@color/ai_text_dark" />
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="16dp">
 
-        <!-- Mensaje de modo práctica -->
-        <TextView
-            android:id="@+id/tvModoPracticaInfo"
+                <ImageButton
+                    android:id="@+id/btnBackPractica"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:padding="10dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_arrow_back_24"
+                    android:contentDescription="@string/volver"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvTituloTutor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ejercicio de práctica"
+                        android:textStyle="bold"
+                        android:textSize="17sp"
+                        android:textColor="@color/white"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
+
+                    <TextView
+                        android:id="@+id/tvModoPracticaInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No modifica tu progreso"
+                        android:textSize="12sp"
+                        android:textColor="#CCFFFFFF"
+                        android:maxLines="1"/>
+                </LinearLayout>
+
+                <!-- Chip modo práctica -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Práctica"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:background="#33FFFFFF"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"/>
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- ══ CONTENIDO SCROLL ══ -->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Este ejercicio es solo para practicar. No modificará tu progreso."
-            android:textSize="13sp"
-            android:textColor="@color/ai_text_muted"
-            android:layout_marginBottom="12dp" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:overScrollMode="never"
+            android:fillViewport="false">
 
-        <!-- Card del enunciado / imagen -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:background="@drawable/bg_card"
-            android:layout_marginBottom="16dp">
-
-            <!-- Imagen del problema (opcional) -->
-            <ImageView
-                android:id="@+id/imgProblema"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:visibility="gone"
-                android:contentDescription="@string/app_name" />
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <!-- Enunciado -->
-            <TextView
-                android:id="@+id/tvEnunciado"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Resuelve para x en la siguiente ecuación: 2x + 5 = 15"
-                android:textSize="16sp"
-                android:textColor="@color/ai_text_dark" />
+                <!-- CARD ENUNCIADO -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@color/ai_card_bg"
+                    app:strokeColor="@color/ai_card_stroke"
+                    app:strokeWidth="1.5dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp">
 
-        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-        <!-- Opciones de respuesta -->
-        <RadioGroup
-            android:id="@+id/rgAlternativas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+                        <!-- Chip competencia -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Álgebra"
+                            android:textColor="@color/ai_primary"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:background="#20818CF8"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="5dp"
+                            android:layout_marginBottom="14dp"/>
 
-            <RadioButton
-                android:id="@+id/rbA"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="A) opción 1"
-                android:textSize="15sp"
-                android:textColor="@color/ai_text_dark"
-                android:buttonTint="@color/ai_primary"
-                android:padding="14dp"
-                android:background="@drawable/bg_option_card"
-                android:layout_marginBottom="8dp" />
+                        <!-- Imagen del problema (opcional) -->
+                        <ImageView
+                            android:id="@+id/imgProblema"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="14dp"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:visibility="gone"
+                            android:contentDescription="@string/app_name"/>
 
-            <RadioButton
-                android:id="@+id/rbB"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="B) opción 2"
-                android:textSize="15sp"
-                android:textColor="@color/ai_text_dark"
-                android:buttonTint="@color/ai_primary"
-                android:padding="14dp"
-                android:background="@drawable/bg_option_card"
-                android:layout_marginBottom="8dp" />
+                        <!-- Enunciado -->
+                        <TextView
+                            android:id="@+id/tvEnunciado"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Resuelve para x: 2x + 5 = 15"
+                            android:textSize="17sp"
+                            android:lineSpacingMultiplier="1.4"
+                            android:textColor="@color/ai_text_dark"/>
 
-            <RadioButton
-                android:id="@+id/rbC"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="C) opción 3"
-                android:textSize="15sp"
-                android:textColor="@color/ai_text_dark"
-                android:buttonTint="@color/ai_primary"
-                android:padding="14dp"
-                android:background="@drawable/bg_option_card"
-                android:layout_marginBottom="8dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-            <RadioButton
-                android:id="@+id/rbD"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="D) opción 4"
-                android:textSize="15sp"
-                android:textColor="@color/ai_text_dark"
-                android:buttonTint="@color/ai_primary"
-                android:padding="14dp"
-                android:background="@drawable/bg_option_card"
-                android:layout_marginBottom="8dp" />
+                <!-- Label opciones -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Selecciona tu respuesta"
+                    android:textColor="@color/ai_text_muted"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"/>
 
-            <RadioButton
-                android:id="@+id/rbE"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="E) opción 5"
-                android:textSize="15sp"
-                android:textColor="@color/ai_text_dark"
-                android:buttonTint="@color/ai_primary"
-                android:padding="14dp"
-                android:background="@drawable/bg_option_card"
-                android:layout_marginBottom="8dp" />
+                <!-- OPCIONES DE RESPUESTA -->
+                <RadioGroup
+                    android:id="@+id/rgAlternativas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-        </RadioGroup>
+                    <RadioButton
+                        android:id="@+id/rbA"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="A) opción 1"
+                        android:textSize="15sp"
+                        android:textColor="@color/ai_text_dark"
+                        android:buttonTint="@color/ai_primary"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="14dp"
+                        android:background="@drawable/bg_option_card"
+                        android:layout_marginBottom="10dp"/>
 
-        <!-- Tarjeta de pista / feedback -->
-        <LinearLayout
-            android:id="@+id/cardFeedback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/bg_card_accent"
-            android:padding="16dp"
-            android:layout_marginTop="20dp"
-            android:visibility="gone">
+                    <RadioButton
+                        android:id="@+id/rbB"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="B) opción 2"
+                        android:textSize="15sp"
+                        android:textColor="@color/ai_text_dark"
+                        android:buttonTint="@color/ai_primary"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="14dp"
+                        android:background="@drawable/bg_option_card"
+                        android:layout_marginBottom="10dp"/>
 
-            <TextView
-                android:id="@+id/tvFeedbackTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="¡Sigue intentando! Aquí tienes una pista:"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@color/ai_text_dark" />
+                    <RadioButton
+                        android:id="@+id/rbC"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="C) opción 3"
+                        android:textSize="15sp"
+                        android:textColor="@color/ai_text_dark"
+                        android:buttonTint="@color/ai_primary"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="14dp"
+                        android:background="@drawable/bg_option_card"
+                        android:layout_marginBottom="10dp"/>
 
-            <TextView
-                android:id="@+id/tvFeedback"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Recuerda aislar la variable 'x' en un lado de la ecuación."
-                android:textSize="14sp"
-                android:textColor="@color/ai_text_dark" />
-        </LinearLayout>
+                    <RadioButton
+                        android:id="@+id/rbD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="D) opción 4"
+                        android:textSize="15sp"
+                        android:textColor="@color/ai_text_dark"
+                        android:buttonTint="@color/ai_primary"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="14dp"
+                        android:background="@drawable/bg_option_card"
+                        android:layout_marginBottom="10dp"/>
 
-        <!-- Botones -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="24dp"
-            android:weightSum="2">
+                    <RadioButton
+                        android:id="@+id/rbE"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="E) opción 5"
+                        android:textSize="15sp"
+                        android:textColor="@color/ai_text_dark"
+                        android:buttonTint="@color/ai_primary"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="14dp"
+                        android:background="@drawable/bg_option_card"
+                        android:layout_marginBottom="10dp"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSubirFoto"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="Sube tu desarrollo"
-                android:textAllCaps="false"
-                android:textColor="@color/ai_primary"
-                android:layout_marginEnd="8dp" />
+                </RadioGroup>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEnviar"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="Verificar respuesta"
-                android:textAllCaps="false"
-                android:backgroundTint="@color/ai_primary"
-                android:textColor="@android:color/white"
-                android:layout_marginStart="8dp" />
+                <!-- CARD PISTA / FEEDBACK -->
+                <LinearLayout
+                    android:id="@+id/cardFeedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_gradient_card_indigo"
+                    android:padding="18dp"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone">
 
-        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="10dp">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="24dp" />
+                        <TextView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:text="💡"
+                            android:textSize="18sp"
+                            android:gravity="center"
+                            android:background="#33FFFFFF"
+                            android:importantForAccessibility="no"/>
+
+                        <TextView
+                            android:id="@+id/tvFeedbackTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="10dp"
+                            android:text="¡Aquí tienes una pista!"
+                            android:textStyle="bold"
+                            android:textSize="15sp"
+                            android:textColor="@color/white"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvFeedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Recuerda aislar la variable 'x'."
+                        android:textSize="14sp"
+                        android:lineSpacingMultiplier="1.4"
+                        android:textColor="#CCFFFFFF"/>
+
+                </LinearLayout>
+
+                <!-- BOTONES -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="24dp"
+                    android:weightSum="2">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSubirFoto"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="Sube tu desarrollo"
+                        android:textAllCaps="false"
+                        android:textColor="@color/ai_primary"
+                        android:layout_marginEnd="8dp"
+                        app:strokeColor="@color/ai_primary"
+                        app:cornerRadius="12dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEnviar"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:text="Verificar"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:layout_marginStart="8dp"
+                        app:backgroundTint="@color/ai_primary"
+                        app:cornerRadius="12dp"/>
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"/>
+
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
-</ScrollView>
+</FrameLayout>
