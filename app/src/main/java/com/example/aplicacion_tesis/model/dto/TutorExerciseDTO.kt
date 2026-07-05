@@ -29,6 +29,18 @@ data class TutorExerciseDTO(
     val esVerificacion:              Boolean? = null
 )
 
+// ✅ Detalle fresco de un ejercicio (GET /ejercicios/{id}) — usado para
+//    refrescar la imagen del ejercicio en pantalla al volver a la pestaña
+data class EjercicioDetalleDataDTO(
+    @SerializedName("idEjercicio") val idEjercicio: Int,
+    @SerializedName("imagenUrl")   val imagenUrl:   String? = null
+)
+
+data class EjercicioDetalleResponse(
+    val status: Boolean,
+    val data:   EjercicioDetalleDataDTO? = null
+)
+
 // ✅ Material sugerido cuando el estudiante falla (asignado por el docente)
 data class MaterialSugeridoDTO(
     @SerializedName("idMaterial")     val idMaterial:     Int,

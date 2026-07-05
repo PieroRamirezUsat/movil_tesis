@@ -183,6 +183,31 @@ class TutorFragment : Fragment() {
         if (idEstudiante != null && !ejercicioCargadoUnaVez) {
             iniciarTutor()
         }
+        // El ejercicio en pantalla se conserva a propósito (para no perder el
+        // trabajo del alumno), pero sus datos pueden haber cambiado en el
+        // servidor (p. ej. el docente le agregó una imagen). Al volver a la
+        // pestaña se re-consulta y se refresca la imagen si cambió.
+        refrescarImagenEjercicioActual()
+    }
+
+    private fun refrescarImagenEjercicioActual() {
+        val actual = currentExercise ?: return
+        val idEj   = actual.idEjercicio ?: return
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val det = RetrofitClient.tutorApi.getEjercicioDetalle(idEj)
+                val urlNueva = det.data?.imagenUrl
+                if (det.status && det.data?.idEjercicio == idEj &&
+                    urlNueva != actual.imagenUrl) {
+                    val actualizado = actual.copy(imagenUrl = urlNueva)
+                    currentExercise   = actualizado
+                    ejercicioGuardado = actualizado
+                    cargarImagenConGlide(urlNueva)
+                }
+            } catch (_: Exception) {
+                // Sin conexión o error: se mantiene la imagen actual
+            }
+        }
     }
 
     private fun corregirUrlParaDispositivo(url: String?): String? {

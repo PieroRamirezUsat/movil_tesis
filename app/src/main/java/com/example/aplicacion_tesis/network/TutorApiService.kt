@@ -1,6 +1,7 @@
 package com.example.aplicacion_tesis.network
 
 import com.example.aplicacion_tesis.model.dto.AperturaMaterialRequest
+import com.example.aplicacion_tesis.model.dto.EjercicioDetalleResponse
 import com.example.aplicacion_tesis.model.dto.EvaluacionActivaResponse
 import com.example.aplicacion_tesis.model.dto.FinalizarEvaluacionResponse
 import com.example.aplicacion_tesis.model.dto.TutorAnswerRequest
@@ -50,4 +51,11 @@ interface TutorApiService {
     suspend fun registrarAperturaMaterial(
         @Body body: AperturaMaterialRequest
     ): retrofit2.Response<Unit>
+
+    // Detalle fresco de un ejercicio (para refrescar imagen/datos del que
+    // está en pantalla sin cambiar de ejercicio)
+    @GET("ejercicios/{id}")
+    suspend fun getEjercicioDetalle(
+        @Path("id") idEjercicio: Int
+    ): EjercicioDetalleResponse
 }
