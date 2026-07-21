@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aplicacion_tesis.network.RetrofitClient
 import com.example.aplicacion_tesis.network.TokenStore
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import com.example.aplicacion_tesis.model.dto.AuthResponse
 import com.example.aplicacion_tesis.model.dto.LoginRequest
 
 sealed class LoginState {
@@ -61,7 +63,21 @@ class LoginViewModel : ViewModel() {
                 }
 
             } catch (e: HttpException) {
-                _state.value = LoginState.Error("Error del servidor (${e.code()}). Vuelve a intentarlo.")
+                // El servidor SÍ manda un mensaje claro en el body ("Correo o
+                // contraseña incorrectos.", "Faltan campos"...), pero Retrofit
+                // trata cualquier 4xx/5xx como excepción y no lo entrega solo:
+                // antes esto mostraba "Error del servidor (401)" — un código
+                // que no le dice nada al usuario. Ahora se lee ese mensaje.
+                val mensajeServidor = try {
+                    e.response()?.errorBody()?.string()
+                        ?.let { Gson().fromJson(it, AuthResponse::class.java) }
+                        ?.message
+                } catch (parseErr: Exception) {
+                    null
+                }
+                _state.value = LoginState.Error(
+                    mensajeServidor ?: "No se pudo iniciar sesión. Vuelve a intentarlo."
+                )
             } catch (e: java.net.SocketTimeoutException) {
                 // Railway "despierta" el servidor tras inactividad: el primer
                 // intento del día puede tardar más de lo normal.
